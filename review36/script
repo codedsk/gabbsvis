@@ -1,0 +1,41 @@
+Welcome back to the GABBs 36 month review.
+Earlier we an indepth view of Idata component that supports the organization of data. Now I'd like to tell you about the outher part of the cyberinfrastructure that supports simulation and data visualization.
+
+The HUBzero Platform provides a place where researchers can collaborate, disseminate their research and science communities can grow.
+
+enables developers and researchers to build software in secure, scalable and sharable desktop-like environments.
+
+
+At the heart of the HUB is the Workspace.
+Workspaces are containerized linux desktops that you can access through your web browser. They run on infrastructure here at Purdue, but through the magic of VNC, the display shows up in your web browser so you can view and manipulation applications with real, desktop style graphical user interfaces. It is like having a desktop available to you inside of your web browser.
+
+We load these workspaces up with software people commonly use to build simulation tools like compilers like gcc and gfortran, editors like emacs and geany, interpreters for Python and Ruby and Perl.
+
+We've also connected the workspaces to super computing resources like XSEDE and Open Science Grid, so people can easily access the computing infrastucture they are familiar with, and visualizations servers so researchers can avoid having to download results after every simulation to see what the results look like.
+
+On the HUB, workspaces serve a two roles. The first role is as an environment where people can develop software and run applications. These same applications can be run without all of the dressings of a standard desktop. They can be run in a paired down environment. This is what happens when a researcher publishing an application on the HUB. That application is setup to run in an environment where it is the focus, as long as the application has a graphical user interface. In fact, this is how the majority of the HUB's simulations run.
+
+Because the workspaces are a generic environment, they can support any graphical user interface that is compatible with the X Windowing system (or X11). This includes libraries like Java's AWT and Swing, WxWindows, Qt, and Tk. While these libraries are great for expert user interface designers, they can sometime be overwhelming for others.
+
+Many of the people we are trying to serve are experts in their field of science and just want to share their research with others on the HUB. This is why we created the Rappture Toolkit, and made it available inside of the workspaces.
+
+Rappture stands for the Rappid APPlication infrastrucTURE and over the years people have used it to build and deploy hundreds of applications online. It has bindings to all of your favorite programming languages.
+
+Earlier, I mentioned that the workspaces have access to visualization servers. Rappture applications hook into these visualization servers so users can seamlessly run a simulation and visualize the output. (cntbands output). And not just visualize a static image of the output, they can interact with it, zoom, rotate, and compare it with output from other runs. (3 part slide, highlight zoom, highlight rotate, highlight compare)
+
+Up until recently, Rappture applications supported visualizing molecules and structures that could be built using vtk. The library lacked a way to visualize geographic data. So in this project we have been integrating geographic visualization services into the workspace environment and the Rappture Toolkit.
+
+As a part of this effort, we have launched a new visualization server that provides geographic mapping to applications based on the Rappture Toolkit. We call it GeoVis and it is based on the osgEarth (https://github.com/gwaldron/osgearth), a free and open source C++ geospacial toolkit.
+
+osgEarth supports all of the common file formats (list them out)
+and data sources like TMS, WMS, ... (list them out)
+It also allows us to visualize data in different projections, includeing 3D data.
+
+Integrating a rappture application with the geovis render server can be done in 5 steps.
+
+Let me show you an application that previously displayed a static map, and now has been updated to include an interactive map. LandParam demo
+
+You can also add geovis visualizations to applications that use Rappture widgets, but are not formally Rappture applications. Here is an example of a tool named Geobuilder. Its purpose is to make it easy to setup your map.
+
+
+
