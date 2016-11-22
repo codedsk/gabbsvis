@@ -1,2 +1,2 @@
 # gabbsvis
-Materials related to simulation and data visualization efforts for the GABBS project
+Materials related to simulation and data visualization efforts for the GABBs project
