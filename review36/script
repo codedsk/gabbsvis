@@ -58,13 +58,12 @@ and it can talk to IData to help minimize copying large datasets.
 
 Integrating a rappture application with the geovis render server can be done in 3 steps.
 Describe your map using the xml
-1. setup the projection and camera
+1. setup the mapviewer
 2. describe the layers
     - standard templates for OGR, TFS, WFS,
-3. associate the layer with a data source.
-Extra:
-4. configure the attribute placard
-5. using the generic feature layer
+3. configure the attribute placard
+4. configure the camera
+5. render results
 
 -----------------------
 
