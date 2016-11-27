@@ -54,6 +54,11 @@ and data sources like TMS, WMS, ... (list them out)
 It also allows us to visualize data in different projections, includeing 3D data.
 and it can talk to IData to help minimize copying large datasets.
 
+Rappture applications can communicate with the render server through the Rappture Mapping widget client.
+
+Researchers can add the MapViewer widget to their Rappture application in about 5 steps.
+1. 
+The new render server works together with a Rappture Mapping widget client. , which can be used inside of a Rappture application. The application sends . Inside of a Rappture application, a developer can People building Rappture applications can use the client widget inside of their application. 
 -----------------------
 
 Integrating a rappture application with the geovis render server can be done in 3 steps.
@@ -69,17 +74,32 @@ Describe your map using the xml
 
 Let me show you an application that previously displayed a static map, and now has been updated to include an interactive map. LandParam demo
 
-You can also add geovis visualizations to applications that use Rappture widgets, but are not formally Rappture applications. Here is an example of a tool named Geobuilder. Its purpose is to make it easy to setup a view your data on a geographic map.
+You can also add geovis visualizations to applications that use Rappture widgets, but are not formally Rappture applications. Here is an example of a tool named Geobuilder. This application was built to help people put together different views of their geospacial data.
 
-If you're building your application in another language like Python, you can take advantage of PyMapLib. It is a library we built to ...
-
-
+( I trimmed down the number of columns in the nypd collision csv file. after loading it in geobuilder and setting up the placard, I tried to filter based on number of people killed. The filtering does not remove pinned data, it only colors the pins differently. the newly colored pins are very hard to see amongst the old pins that remain present on the map. if an item is "unpinned" it should be removed from the map or maybe we can switch the icon to a single pixel so it doesnt show up.)
 
 
+-----------------------
 
------------------------------------------------------------------------
+If you're building your application in another language like Python, you can take advantage of PyMapLib. It is a library we built to fill the gap for researchers looking for an easy to use open source map library. It provides a generic framework for geospacial data visualization and handles common geospacial data types and protocols. It is good for building applications that do simple data visualization and analysis.
 
-The HUBzero Platform provides a place where researchers can collaborate, disseminate their research and science communities can grow.
+-----------------------
 
-enables developers and researchers to build software in secure, scalable and sharable desktop-like environments.
+It is built on top of:
+* qgis, which provides geospacial data rendering
+* pyqt, which the user inerface is written in
+* gdal/ogr, which does the parsing and querying of data sources
+* proj4, which provides projection information
+* and matplotlib, which provides 2D plotting
+
+but the user doesnt see any of these pieces when configuring the widget. They interact with an api that resembles the Google Maps API. Based off their configuration they can load map layers, configure sidebars.
+
+
+-----------------------
+
+conclusion
+two building block solutions:
+1. Rappture widget supports Rappture applications, can be used in tcl/tk applications as well. supports visualization of 2D and 3D data, render server backed solution.
+2. PyMapLib supports Python applications, 2D data, allows developers to quickly tap into more complicated libraries like qgis, gdal, proj4, and matplotlib.
+
 
