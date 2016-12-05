@@ -1,37 +1,46 @@
 Welcome back to the GABBs 36 month review.
 
 
-Earlier we heard an indepth view of Idata component that supports the access and organization of data. Data management is one of major pieces that make up a HUB. Now, I'd like to shift our focus a little bit to another part of the cyberinfrastructure that supports simulation, modeling, and data visualization.
+Earlier we heard an indepth view of the Idata components that support the access and organization of data. Data management is one of major pieces that make up a HUB. Now, I'd like to shift our focus a little bit to another part of the cyberinfrastructure that supports simulation, modeling, and data visualization.
 
 -----------------------
 
 In this section we'll discuss two approaches we have taken to providing building blocks that researchers can use to incorporate geospacial data into their simulations, and visualize the output of simulations that involve geospacial data.
 
-Along the way, I'll show you how we incorprated geospacial data visualization into the Rappture Toolkit, and how people can now build Rappture based simulation tools that show geospacial data as output.
+Along the way, I'll show you how we made these features available in the Rappture Toolkit and how people can now build Rappture based simulation tools that show geospacial data as output.
 
-And you'll also be introduced to the PyMapLib library, which provides an easy way for researchers to visualize geospacial data in graphical user interfaces written in Python Java, and C++.
+I'll also show you a library we developed, called PyMapLib, which provides an easy way for researchers to visualize geospacial data in graphical user interfaces written in Python, Java, and C++.
 
 
 But before we get to those, I want to give you a little bit of background information about the different pieces in our infrastructure that are needed to support these solutions.
 
 -----------------------
 
-Many people know the hubzero platform for it Seminars, Data Management, Online education modules, and Questiosn and Answer boards, but at the heart of the HUB is the simulation and modeling environment it provides. We call it the tool container.
+Many people know the hubzero platform for it Seminars, Data Management, Question and Answer boards, and Online education modules, but at the heart of the HUB is the simulation and modeling environment it provides.
 
 -----------------------
 
-Tool containers are containerized linux desktops that you can access through your web browser. They run on infrastructure here at Purdue, but through the magic of VNC, the display shows up in your web browser so you can view and manipulation applications with real, desktop style graphical user interfaces. It is like having a desktop available to you inside of your web browser.
+We call it the tool container.
+
+Tool containers are containerized linux desktops that you can access through your web browser.
+
+-----------------------
+
+
+They run on infrastructure either here at Purdue or wherever the hub is located, but through the magic of VNC, the display shows up in your web browser so you can view and manipulation applications with real, desktop style graphical user interfaces. It's like having a desktop available to you inside of your web browser.
 
 
 We load these containers up with software people commonly use to build simulation tools. These include things like the gcc and gfortan compilers, editors like emacs and geany, debuggers, and interpreters for Python, Ruby and Perl.
 
 -----------------------
 
-We've connected the tool containers to super computing resources like XSEDE and Open Science Grid, so people can easily access the computing infrastucture they are familiar with, and visualizations servers so researchers can avoid having to download results after every simulation to see what the results look like.
-
-The tool containers are an environment where people can develop software and run applications. When the developer is ready to share their application with others, they can publish it on the HUB website, and it will run in the same type of environment in which they developed it.
+We've connected the tool containers to super computing resources like XSEDE and Open Science Grid, so people can easily access the computing infrastucture they are familiar with,
 
 -----------------------
+
+and visualizations servers so researchers can avoid having to download results after every simulation to see what the results look like.
+
+The tool containers are an environment where people can develop software and run applications. When the developer is ready to share their application with others, they can publish it on the HUB website, and it will run in the same type of environment in which they developed it.
 
 Because the tool containers are a generic environment, they can support any graphical user interface that is compatible with the X Windowing system (or X11). This includes libraries like Java's AWT and Swing, WxWindows, Qt, and Tk. While these libraries are great for expert user interface designers, they can sometime be overwhelming for others.
 
@@ -39,26 +48,66 @@ Many of the people we are trying to serve are experts in their field of science 
 
 -----------------------
 
-Rappture stands for the Rappid APPlication infrastrucTURE and over the years people have used it to build and deploy hundreds of applications online. It has bindings to all of your favorite programming languages.
+Rappture stands for the Rappid APPlication infrastrucTURE and over the years people have used it to build and deploy hundreds of applications online.
+
+With Rappture, developers can quickly generate a graphical user interface that collects inputs from the user, a simulation, and visualizes the output for the user.
+
+Because the underlying simulation code could be written in any programming language, Rappture has bindings to all of your favorite programming languages, including C, C++, Python, Perl, Java, Matlab and Others.
 
 -----------------------
 
-Earlier, I mentioned that the tool containers have access to render servers. Rappture applications hook into these visualization servers so users can seamlessly run a simulation and visualize the output. (cntbands output). And by visualize, I don't mean just showing a static image of the output. These outputs are interactive in that users, zoom, rotate, and compare them with output from other runs. (3 part slide, highlight zoom, highlight rotate, highlight compare)
+Earlier, I mentioned that the tool containers have access to render servers. Rappture applications hook into these render servers so users can seamlessly run a simulation
+
+-----------------------
+
+and visualize the output. And by visualize, I don't mean just showing a static image of the output, although it can handle that. These outputs are interactive in that users can zoom, rotate, and compare them with output from other runs.
+
+-----------------------
 
 Up until recently, Rappture applications supported visualizing molecules through PyMol and 3D structures through VTK. The library lacked a way to visualize geographic data. So in this project we have been integrating geographic visualization services into the workspace environment and the Rappture Toolkit.
 
-As a part of this effort, we have launched a new visualization server that provides geographic mapping to applications based on the Rappture Toolkit. We call it GeoVis and it is based on the osgEarth (https://github.com/gwaldron/osgearth), a free and open source C++ geospacial toolkit.
+-----------------------
 
-osgEarth supports all of the common file formats (list them out)
-and data sources like TMS, WMS, ... (list them out)
-It also allows us to visualize data in different projections, includeing 3D data.
-and it can talk to IData to help minimize copying large datasets.
+As a part of this effort, we have launched a new visualization server that provides geographic mapping to applications based on the Rappture Toolkit. We call it GeoVis and it's based on osgEarth, a free and open source C++ geospaitial toolkit.
 
-Rappture applications can communicate with the render server through the Rappture Mapping widget client.
+osgEarth supports many  of the common data formats including GeoTiff, netCDFm TMS,WMs, and XYZ for Raster. If you're working with shapefiles or other vector data, OSG Earth can handle that too. Because it's roots are from the work of 3 dimentional visualization, it can handle the 3D model formats of OpenSceneGraph.
 
-Researchers can add the MapViewer widget to their Rappture application in about 5 steps.
-1. 
-The new render server works together with a Rappture Mapping widget client. , which can be used inside of a Rappture application. The application sends . Inside of a Rappture application, a developer can People building Rappture applications can use the client widget inside of their application. 
+-----------------------
+
+We've set it up to talk to IData so users can pull data from their projects, and combine it outside resources like mapquest, mapbox, and openstreetmaps, all on one map.
+
+-----------------------
+
+And Rappture applications can communicate with the render server through the Rappture Mapping widget client.
+
+-----------------------
+
+Lets take a look at what it takes to add geospatial data to a Rappture Application.
+Here, I have a dataset from a 2010 earthquake in Chile. It is a part of a larger database compiled by Ann Christine Catlin for the Disaster and Failure Studies Program at NIST. After the earthquake, researchers were able to document the location attributes of damaged buildings. The data is stored in a comma separated value file.
+
+Let's look at what it would take to visualize this data.
+
+-----------------------
+
+To give the data context, it would be nice to visualize it as makers on top of a map of Chile. We can get a map of Chile from the OpenStreetMap project. They host a tile server with Raster formated images showing the layout of the city and streets.
+
+-----------------------
+
+In the end I'd like to combine these two data sources together and see markers from my earthquake data on top of a map of the Chile.
+
+-----------------------
+
+Then I'd like to be able to focus my attention on the capitol city Santiago where I can get street level detail and investigate individual damage locations.
+
+-----------------------
+
+And when I click on a marker on the map, I want to be able to tell the name of the building and the city it is located in.
+
+-----------------------
+
+With the Rappture Toolkit, we can build an application like this in minutes.
+There are about 5 steps involved.
+
 -----------------------
 
 Integrating a rappture application with the geovis render server can be done in 3 steps.
@@ -73,10 +122,6 @@ Describe your map using the xml
 -----------------------
 
 Let me show you an application that previously displayed a static map, and now has been updated to include an interactive map. LandParam demo
-
-You can also add geovis visualizations to applications that use Rappture widgets, but are not formally Rappture applications. Here is an example of a tool named Geobuilder. This application was built to help people put together different views of their geospacial data.
-
-( I trimmed down the number of columns in the nypd collision csv file. after loading it in geobuilder and setting up the placard, I tried to filter based on number of people killed. The filtering does not remove pinned data, it only colors the pins differently. the newly colored pins are very hard to see amongst the old pins that remain present on the map. if an item is "unpinned" it should be removed from the map or maybe we can switch the icon to a single pixel so it doesnt show up.)
 
 
 -----------------------
