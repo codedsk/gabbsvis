@@ -5,7 +5,7 @@ Earlier we heard an indepth view of the Idata components that support the access
 
 -----------------------
 
-In this section we'll discuss two approaches we have taken to providing building blocks that researchers can use to incorporate geospacial data into their simulations, and visualize the output of simulations that involve geospacial data.
+In this section we'll discuss two approaches we've taken to providing building blocks that researchers can use to incorporate geospacial data into their simulations, and visualize the output of simulations that involve geospacial data.
 
 Along the way, I'll show you how we made these features available in the Rappture Toolkit and how people can now build Rappture based simulation tools that show geospacial data as output.
 
@@ -110,23 +110,55 @@ There are about 5 steps involved.
 
 -----------------------
 
-Integrating a rappture application with the geovis render server can be done in 3 steps.
-Describe your map using the xml
-1. setup the mapviewer
-2. describe the layers
-    - standard templates for OGR, TFS, WFS,
-3. configure the attribute placard
-4. configure the camera
-5. render results
+Step 1. Let Rappture know you want to add a map.
+
+The Rappture map client communicates with the render server through xml files and messages. So the calls to the "put" command you see here will be translated into xml by the Rappture Library.
+
+We can tell Rappture to visualize geospatial data by setting up a map viewer widget.
+All widgets in Rappture have a label, so we give our mapviewer widget a label.
+
+Also we set the type of map and the projection of the map. If the developer doesn't know the the type of the projection, they can try using the defaults, which are setup to handle what people commonly expect to see.
 
 -----------------------
 
-Let me show you an application that previously displayed a static map, and now has been updated to include an interactive map. LandParam demo
+Step 2. Describe the layers of the map.
+
+Maps are layers of information stacked on top of each other. In our example, we have two layers, the first layer is going to be our OpenStreetMap data source that gives us raster images of Colombia.
+
+We setup a label and description, and choose a layer type of image because it is raster data source. We also provide the url for the data source. if our raster data was in a file, we could have alternatively provided the path of the file.
+
+-----------------------
+
+Next we add our Chile earthquake data as a layer. For this layer, we want the data to show up as icons on the map, so we set the layer type to "icon". The data is located in a comma separated value file on disk. We can use the OGR driver to parse it. If the file were located over on IData, we could have used an idata url here instead.
+
+-----------------------
+
+For our earthquake data, we wanted to be able to see some information when we clicked on each marker. We can setup a placard to show this information. In the placard setup, we can map column names from our data source to labels in the placard. We can also style the placard. In this example, we set the background fill to white with a little transparency, set the text color to black, and use size 12 font.
+
+-----------------------
+
+One last piece to complete.
+By default, Rappture will try to choose a camera setting that fit all of the data into the viewport.
+We wanted the camera to point over the capitol city of Santiago.
+We can accomplish this by setting the camera viewport with min and max latitude and longitude values.
+
+-----------------------
+
+So, we've described our map and data to Rappture and now it can be rendered. The information is sent off to the render server, which gathers all of the data sources and creates an image and sends it back to the Rappture application. The simulation user can then interact with the widget to explore that view, or navigate to another location. The newly rendered images streamed to the mapviewer client, so navigation looks smooth.
+
+This is a big improvement over a static map image.
+
+-----------------------
+
+Infact, let's take a look at an application that previously displayed a static map, and now has been updated to include an interactive map.
+
+-----------------------
+
 
 
 -----------------------
 
-If you're building your application in another language like Python, you can take advantage of PyMapLib. It is a library we built to fill the gap for researchers looking for an easy to use open source map library. It provides a generic framework for geospacial data visualization and handles common geospacial data types and protocols. It is good for building applications that do simple data visualization and analysis.
+If you're building your graphical user interface in another language like Python, you can take advantage of PyMapLib. It is a library we built to fill the gap for researchers looking for an easy to use open source map library. It provides a generic framework for geospacial data visualization and handles common geospacial data types and protocols. It is good for building applications that do simple data visualization and analysis.
 
 -----------------------
 
@@ -135,16 +167,46 @@ It is built on top of:
 * pyqt, which the user inerface is written in
 * gdal/ogr, which does the parsing and querying of data sources
 * proj4, which provides projection information
-* and matplotlib, which provides 2D plotting
+* and matplotlib, which provides 2D data plotting
 
-but the user doesnt see any of these pieces when configuring the widget. They interact with an api that resembles the Google Maps API. Based off their configuration they can load map layers, configure sidebars.
-
+But the user doesnt see any of these pieces when configuring the widget. They interact with an api that resembles the Google Maps API. Based off their configuration they can load map layers, configure sidebars.
 
 -----------------------
 
-conclusion
-two building block solutions:
-1. Rappture widget supports Rappture applications, can be used in tcl/tk applications as well. supports visualization of 2D and 3D data, render server backed solution.
-2. PyMapLib supports Python applications, 2D data, allows developers to quickly tap into more complicated libraries like qgis, gdal, proj4, and matplotlib.
+Just like in our previous example, we'll first setup our map container and then add layers of data to it.
 
+In this example, our map container looks like this. The API allows the developer to configure different controls in the sidebar, so they could add a zoom button or a button to control the layers being shown.
+
+-----------------------
+
+Next you would add layers of data to the map container.
+PyMapLib has a few preconfigured data sources, so you can say "I want to use the OpenStreetMap source" and you don't need to know the url for the source.
+
+-----------------------
+
+Or you could specify the file path or url of your data like we do here with this shapefile of the state of Indiana.
+
+-----------------------
+
+Or this raster data that we setup with a color map and a scale.
+
+-----------------------
+
+We've been using PyMapLib to integrate geospatial data visualization into several applications because it is a quick and easy solution. The Weather Data Explorer is one example.
+
+It's available on mygeohub.org and came about as a collaboration between a professor in Earth, Atmospheric, and Planetary Sciences and INDOT, the Indiana Department of Transportation. They had built weather simulation models models and stored the collected data from running these models in a database, but needed a way to query and aggregate the results. We worked with them to build an application to interactively explore this data.
+
+-----------------------
+
+And since it was geospacial data, we used PyMapLib to provide the mapping widget.
+
+Let's run the application to get a feel for how PyMapLib fits in.
+
+-----------------------
+
+Our team has been working on providing solutions that allow people to interactively explore their geospatial data. So far we've been focusing on two building blocks:
+
+The first one was to build an interactive geospatial output widget for the Rappture Toolkit. Using the HUBzero infrastucture, we were able to create a solution that allows developers to quickly assemble a graphical user interface to visualize 2D and 3D data. And it works with all of the programming languages that Rappture works with.
+
+The second building block we focused on was PyMapLib, which allows developers to quickly configure and embed a feature rich 2D mapping client into their application.
 
