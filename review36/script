@@ -1,15 +1,15 @@
 Welcome back to the GABBs 36 month review.
 
 
-Earlier we heard an indepth view of the Idata components that support the access and organization of data. Data management is one of major pieces that make up a HUB. Now, I'd like to shift our focus a little bit to another part of the cyberinfrastructure that supports simulation, modeling, and data visualization.
+Earlier we saw an indepth view of the Idata components that support the access and organization of data. Data management is one of major pieces that make up a HUB. Now, I'd like to shift our focus a little bit to another part of the cyberinfrastructure that supports simulation, modeling, and data visualization.
 
 -----------------------
 
-In this section we'll discuss two approaches we've taken to providing building blocks that researchers can use to incorporate geospacial data into their simulations, and visualize the output of simulations that involve geospacial data.
+In this section we'll discuss two approaches we've taken to providing building blocks that researchers can use to incorporate geospatial data into their simulations, and visualize the output of simulations that involve geospatial data.
 
-Along the way, I'll show you how we made these features available in the Rappture Toolkit and how people can now build Rappture based simulation tools that show geospacial data as output.
+Along the way, I'll show you how we made these features available in the Rappture Toolkit and how people can now build Rappture based simulation tools that show geospatial data as output.
 
-I'll also show you a library we developed, called PyMapLib, which provides an easy way for researchers to visualize geospacial data in graphical user interfaces written in Python, Java, and C++.
+I'll also show you a library we developed, called PyMapLib, which provides an easy way for researchers to visualize geospatial data in graphical user interfaces written in Python, Java, and C++.
 
 
 But before we get to those, I want to give you a little bit of background information about the different pieces in our infrastructure that are needed to support these solutions.
@@ -20,14 +20,17 @@ Many people know the hubzero platform for it Seminars, Data Management, Question
 
 -----------------------
 
+That is what we'll be focusing on now.
+
+-----------------------
+
 We call it the tool container.
 
 Tool containers are containerized linux desktops that you can access through your web browser.
 
 -----------------------
 
-
-They run on infrastructure either here at Purdue or wherever the hub is located, but through the magic of VNC, the display shows up in your web browser so you can view and manipulation applications with real, desktop style graphical user interfaces. It's like having a desktop available to you inside of your web browser.
+They run on infrastructure either here at Purdue or wherever the hub is located, but through the magic of VNC, the display shows up in your web browser so you can view and manipulate applications with real, desktop style graphical user interfaces. It's like having a desktop available to you inside of your web browser.
 
 
 We load these containers up with software people commonly use to build simulation tools. These include things like the gcc and gfortan compilers, editors like emacs and geany, debuggers, and interpreters for Python, Ruby and Perl.
@@ -42,7 +45,7 @@ and visualizations servers so researchers can avoid having to download results a
 
 The tool containers are an environment where people can develop software and run applications. When the developer is ready to share their application with others, they can publish it on the HUB website, and it will run in the same type of environment in which they developed it.
 
-Because the tool containers are a generic environment, they can support any graphical user interface that is compatible with the X Windowing system (or X11). This includes libraries like Java's AWT and Swing, WxWindows, Qt, and Tk. While these libraries are great for expert user interface designers, they can sometime be overwhelming for others.
+Because the tool containers are a generic environment, they can support any graphical user interface that is compatible with the X Windowing system (or X11). This includes libraries like Java's AWT and Swing, WxWidgets, Qt, and Tk. While these libraries are great for expert user interface designers, they can sometime be overwhelming for others.
 
 Many of the people we are trying to serve are experts in their field of science and just want to share their research with others on the HUB. This is why we created the Rappture Toolkit, and made it available inside of the workspaces.
 
@@ -50,7 +53,7 @@ Many of the people we are trying to serve are experts in their field of science 
 
 Rappture stands for the Rappid APPlication infrastrucTURE and over the years people have used it to build and deploy hundreds of applications online.
 
-With Rappture, developers can quickly generate a graphical user interface that collects inputs from the user, a simulation, and visualizes the output for the user.
+With Rappture, developers can quickly generate a graphical user interface that collects inputs from the user, runs a simulation, and visualizes the output for the user.
 
 Because the underlying simulation code could be written in any programming language, Rappture has bindings to all of your favorite programming languages, including C, C++, Python, Perl, Java, Matlab and Others.
 
@@ -66,42 +69,57 @@ and visualize the output. And by visualize, I don't mean just showing a static i
 
 Up until recently, Rappture applications supported visualizing molecules through PyMol and 3D structures through VTK. The library lacked a way to visualize geographic data. So in this project we have been integrating geographic visualization services into the workspace environment and the Rappture Toolkit.
 
------------------------
-
-As a part of this effort, we have launched a new visualization server that provides geographic mapping to applications based on the Rappture Toolkit. We call it GeoVis and it's based on osgEarth, a free and open source C++ geospaitial toolkit.
-
-osgEarth supports many  of the common data formats including GeoTiff, netCDFm TMS,WMs, and XYZ for Raster. If you're working with shapefiles or other vector data, OSG Earth can handle that too. Because it's roots are from the work of 3 dimentional visualization, it can handle the 3D model formats of OpenSceneGraph.
+As a part of this effort, we have launched a new visualization server that provides geographic mapping to applications based on the Rappture Toolkit. We call it GeoVis and it's based on OSG Earth, a free and open source C++ geospaitial toolkit.
 
 -----------------------
 
-We've set it up to talk to IData so users can pull data from their projects, and combine it outside resources like mapquest, mapbox, and openstreetmaps, all on one map.
+OSG Earth supports many  of the common data formats including GeoTiff, netCDF, TMS, WMS, and XYZ for Raster. If you're working with shapefiles or other vector data, OSG Earth can handle that too. Because it's roots are from 3 dimensional visualization, it can handle the 3D model formats of OpenSceneGraph.
 
 -----------------------
 
-And Rappture applications can communicate with the render server through the Rappture Mapping widget client.
+We've set it up to talk to IData so users can pull data from their projects, and combine it with outside resources like mapquest, mapbox, and openstreetmap, all on one map.
 
 -----------------------
 
-Lets take a look at what it takes to add geospatial data to a Rappture Application.
-Here, I have a dataset from a 2010 earthquake in Chile. It is a part of a larger database compiled by Ann Christine Catlin for the Disaster and Failure Studies Program at NIST. After the earthquake, researchers were able to document the location attributes of damaged buildings. The data is stored in a comma separated value file.
-
-Let's look at what it would take to visualize this data.
+And Rappture applications can communicate with the render server through the Rappture Mapping widget.
 
 -----------------------
 
-To give the data context, it would be nice to visualize it as makers on top of a map of Chile. We can get a map of Chile from the OpenStreetMap project. They host a tile server with Raster formated images showing the layout of the city and streets.
+Let's see what it takes to add geospatial data to a Rappture Application.
 
 -----------------------
 
-In the end I'd like to combine these two data sources together and see markers from my earthquake data on top of a map of the Chile.
+Here, I have a dataset from a 2010 Chile earthquake. It's a part of a larger
+database compiled by Ann Christine Catlin for the Disaster and Failure Studies
+Program at NIST. After the earthquake, researchers were able to document the
+location and attributes of damaged buildings. The data is stored in a comma
+separated value file.
 
 -----------------------
 
-Then I'd like to be able to focus my attention on the capitol city Santiago where I can get street level detail and investigate individual damage locations.
+To give the data context, it would be nice to visualize it as makers on top of
+a map of Chile. We can get a map of Chile from the OpenStreetMap project. They
+host a tile server with Raster formated images showing the layout of cities and
+streets.
 
 -----------------------
 
-And when I click on a marker on the map, I want to be able to tell the name of the building and the city it is located in.
+In the end I'd like to combine these two data sources together and see markers
+from my earthquake data on top of a map of Chile.
+
+-----------------------
+
+Then I'd like to be able to focus my attention on the capitol city Santiago
+
+-----------------------
+
+where I can get street level detail and investigate individual damage
+locations.
+
+-----------------------
+
+And when I click on a marker on the map, I want to be able to tell the name of
+the building and the city it is located in.
 
 -----------------------
 
@@ -112,45 +130,78 @@ There are about 5 steps involved.
 
 Step 1. Let Rappture know you want to add a map.
 
-The Rappture map client communicates with the render server through xml files and messages. So the calls to the "put" command you see here will be translated into xml by the Rappture Library.
+The Rappture map client communicates with the render server through xml files
+and messages. So the calls to the "put" command you see here will be translated
+into xml by the Rappture Library.
 
-We can tell Rappture to visualize geospatial data by setting up a map viewer widget.
-All widgets in Rappture have a label, so we give our mapviewer widget a label.
+We can tell Rappture to visualize geospatial data by setting up a map viewer
+widget.  All widgets in Rappture have a label, so we give our mapviewer widget
+a label.
 
-Also we set the type of map and the projection of the map. If the developer doesn't know the the type of the projection, they can try using the defaults, which are setup to handle what people commonly expect to see.
+Also we set the type of map and the projection of the map. If the developer
+doesn't know the type or projection, they can try using the defaults, which are
+setup to handle what people commonly expect to see.
 
 -----------------------
 
 Step 2. Describe the layers of the map.
 
-Maps are layers of information stacked on top of each other. In our example, we have two layers, the first layer is going to be our OpenStreetMap data source that gives us raster images of Colombia.
+Maps are layers of information stacked on top of each other. In our example, we
+have two layers, the first layer is going to be our OpenStreetMap data source,
+that gives us raster images of Colombia.
 
-We setup a label and description, and choose a layer type of image because it is raster data source. We also provide the url for the data source. if our raster data was in a file, we could have alternatively provided the path of the file.
+We setup a label and description, and choose a layer type of "image" because
+it's a raster data source. We also provide the url for the data source.
+
+If our raster data was in a file, we could have alternatively provided the path
+of the file.
 
 -----------------------
 
-Next we add our Chile earthquake data as a layer. For this layer, we want the data to show up as icons on the map, so we set the layer type to "icon". The data is located in a comma separated value file on disk. We can use the OGR driver to parse it. If the file were located over on IData, we could have used an idata url here instead.
+Next we add our Chile earthquake data as a layer. For this layer, we want the
+data to show up as icons on the map, so we set the layer type to "icon". The
+data is located in a comma separated value file on disk. We can use the OGR
+driver to parse it.
+
+If the file were located over on IData, we could have used an idata url here
+instead.
 
 -----------------------
 
-For our earthquake data, we wanted to be able to see some information when we clicked on each marker. We can setup a placard to show this information. In the placard setup, we can map column names from our data source to labels in the placard. We can also style the placard. In this example, we set the background fill to white with a little transparency, set the text color to black, and use size 12 font.
+For our earthquake data, we wanted to be able to SEE some information when we
+clicked on each marker. We can setup a placard to show this information.
+
+In the placard setup, we can map column names from our data source to labels in
+the placard.
+
+We can also style the placard. In this example, we set the background fill to
+white with a little transparency, set the text color to black, and use size 12
+font.
 
 -----------------------
 
 One last piece to complete.
-By default, Rappture will try to choose a camera setting that fit all of the data into the viewport.
-We wanted the camera to point over the capitol city of Santiago.
-We can accomplish this by setting the camera viewport with min and max latitude and longitude values.
+
+By default, Rappture will try to choose a camera setting that fits all of the
+data into the viewport.  We wanted the camera to point over the capitol city of
+Santiago.  We can accomplish this by setting the camera viewport with min and
+max latitude and longitude values.
 
 -----------------------
 
-So, we've described our map and data to Rappture and now it can be rendered. The information is sent off to the render server, which gathers all of the data sources and creates an image and sends it back to the Rappture application. The simulation user can then interact with the widget to explore that view, or navigate to another location. The newly rendered images streamed to the mapviewer client, so navigation looks smooth.
+So, we've described our map and data to Rappture and now it can be rendered.
+The information is sent off to the render server, which gathers all of the data
+sources and creates an image and sends it back to the Rappture application. The
+simulation user can then interact with the widget to explore that view, or
+navigate to another location. The newly rendered images are streamed to the
+mapviewer client, so navigation looks smooth.
 
 This is a big improvement over a static map image.
 
 -----------------------
 
-Infact, let's take a look at an application that previously displayed a static map, and now has been updated to include an interactive map.
+Infact, let's take a look at an application that previously displayed a static
+map, and now has been updated to include an interactive map.
 
 -----------------------
 
@@ -158,33 +209,51 @@ Infact, let's take a look at an application that previously displayed a static m
 
 -----------------------
 
-If you're building your graphical user interface in another language like Python, you can take advantage of PyMapLib. It is a library we built to fill the gap for researchers looking for an easy to use open source map library. It provides a generic framework for geospacial data visualization and handles common geospacial data types and protocols. It is good for building applications that do simple data visualization and analysis.
+If you're building your graphical user interface in another language like
+Python, you can take advantage of PyMapLib. It's a library we built to fill the
+gap for researchers looking for an easy to use, open source map library.
+
+It provides a generic framework for geospatial data visualization and handles
+common geospatial data types and protocols.
+
+It's good for building applications that do simple data visualization and
+analysis.
 
 -----------------------
 
 It is built on top of:
-* qgis, which provides geospacial data rendering
+* qgis, which provides geospatial data rendering
 * pyqt, which the user inerface is written in
 * gdal/ogr, which does the parsing and querying of data sources
 * proj4, which provides projection information
 * and matplotlib, which provides 2D data plotting
 
-But the user doesnt see any of these pieces when configuring the widget. They interact with an api that resembles the Google Maps API. Based off their configuration they can load map layers, configure sidebars.
+But the user doesnt see any of these pieces when configuring the widget. They
+interact with an api that resembles the Google Maps API. Based off their
+configuration they can load map layers, configure sidebars.
+
+Let's take a look at how to use this library.
 
 -----------------------
 
-Just like in our previous example, we'll first setup our map container and then add layers of data to it.
+Just like in our previous example, we'll first setup our map container and then
+add layers of data to it.
 
-In this example, our map container looks like this. The API allows the developer to configure different controls in the sidebar, so they could add a zoom button or a button to control the layers being shown.
+In this example, our map container looks like this. The API allows the
+developer to configure different controls in the sidebar, so they could add a
+zoom button or a button to control the layers being shown.
 
 -----------------------
 
 Next you would add layers of data to the map container.
-PyMapLib has a few preconfigured data sources, so you can say "I want to use the OpenStreetMap source" and you don't need to know the url for the source.
+
+PyMapLib has a few preconfigured data sources, so you can say "I want to use
+the OpenStreetMap source" and you don't need to know the url for the source.
 
 -----------------------
 
-Or you could specify the file path or url of your data like we do here with this shapefile of the state of Indiana.
+Or you could specify the file path or url of your data like we do here with
+this shapefile of the state of Indiana.
 
 -----------------------
 
@@ -192,21 +261,39 @@ Or this raster data that we setup with a color map and a scale.
 
 -----------------------
 
-We've been using PyMapLib to integrate geospatial data visualization into several applications because it is a quick and easy solution. The Weather Data Explorer is one example.
+We've been using PyMapLib to integrate geospatial data visualization into
+several applications because it's a quick and easy solution. The Weather Data
+Explorer is one example.
 
-It's available on mygeohub.org and came about as a collaboration between a professor in Earth, Atmospheric, and Planetary Sciences and INDOT, the Indiana Department of Transportation. They had built weather simulation models models and stored the collected data from running these models in a database, but needed a way to query and aggregate the results. We worked with them to build an application to interactively explore this data.
+It's available on mygeohub.org and came about as a collaboration between a
+professor in Earth, Atmospheric, and Planetary Sciences and INDOT, the Indiana
+Department of Transportation. They had previously built weather simulation
+models and stored the collected data from running these models in a database,
+but needed a way to query and aggregate the results. We worked with them to
+build an application to interactively explore this data.
 
 -----------------------
 
-And since it was geospacial data, we used PyMapLib to provide the mapping widget.
+And since it was geospatial data, we used PyMapLib to provide the mapping
+widget.
 
 Let's run the application to get a feel for how PyMapLib fits in.
 
 -----------------------
 
-Our team has been working on providing solutions that allow people to interactively explore their geospatial data. So far we've been focusing on two building blocks:
+Our team has been working on providing solutions that allow people to
+interactively explore their geospatial data. So far we've been focusing on two
+building blocks:
 
-The first one was to build an interactive geospatial output widget for the Rappture Toolkit. Using the HUBzero infrastucture, we were able to create a solution that allows developers to quickly assemble a graphical user interface to visualize 2D and 3D data. And it works with all of the programming languages that Rappture works with.
+The first one was to build an interactive geospatial output widget for the
+Rappture Toolkit. Using the HUBzero infrastucture, we were able to create a
+solution that allows developers to quickly assemble a graphical user interface
+to visualize 2D and 3D data. And it works with all of the programming languages
+that Rappture works with.
 
-The second building block we focused on was PyMapLib, which allows developers to quickly configure and embed a feature rich 2D mapping client into their application.
+The second building block we focused on was PyMapLib, which allows developers
+to quickly configure and embed a feature rich 2D mapping client into their
+application.
 
+
+Thank you for your time, I'd like to open the floor to questions now.
